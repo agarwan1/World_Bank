@@ -1,5 +1,6 @@
-#import necessary libraries
+# import necessary libraries
 #import numpy as np
+
 import os
 from flask import (
     Flask,
@@ -9,10 +10,12 @@ from flask import (
     redirect)
 
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from flask_sqlalchemy import SQLAlchemy
+#from sqlalchemy import create_engine, func, desc,select
+
 
 #################################################
 # Flask Setup
@@ -23,28 +26,27 @@ app = Flask(__name__)
 # Database Setup
 #################################################
 
-#engine = create_engine("mysql://root:root@localhost:3306/countryind2")
-engine = create_engine('mysql://root:root@localhost:3306/bootcamp')
+#################################################
+# Database Setup
+#################################################
+engine = create_engine("mysql://root:root@localhost:3306/bootcamp")
 connection = engine.connect()
-
-#Test the connection with a sample query. 
-# info = connection.execute("select * from gdp_in_usd_abbr_view where country_code = 'ARB'").fetchall()
-# print(info)
+#result = connection.execute("select * from countrylist")
+#for row in result:
+#    print("country name:", row['Country_Name'])
+#connection.close()
 
 # create route that renders index.html template
 @app.route("/")
 def home():
-    #return(f"Available Routes")
     return render_template("index.html")
 
 @app.route("/plotlychart.html")
 def plotlychart():
-    #return(f"Plotly Routes")
     return render_template("plotlychart.html")
 
 @app.route("/earth.html")
 def earthchart():
-    #return(f"Earth Routes")
     return render_template("earth.html")
 
 @app.route('/countrynames')
@@ -52,138 +54,89 @@ def names():
        new_name_list = {}
        countryname = []
        countrycode = []
-       name_list = connection.execute("SELECT * FROM country").fetchall()
+       name_list = connection.execute("SELECT * FROM countrylist").fetchall()
         
        for name in name_list:
-           countryname.append(name[2])
-           countrycode.append(name[1])
+           countryname.append(name[1])
+           countrycode.append(name[0])
        new_name_list['countryname']=countryname
        new_name_list['countrycode']=countrycode
 
        return jsonify(new_name_list)
+   
+# Return data for rendersing the earth chart
+@app.route('/gdpinfo/<countrycode>/<start_year>/<end_year>')
+def gdpinfo(countrycode,start_year,end_year): 
+     
+   
+    sqlstring = "select * from gdp_in_usd_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
-# Return global data.
-#county_name, country_code, indicator_value, year
-@app.route('/globalinfo/<country>')
-def globalinfo(country): 
-        global_dict = {}
-        countryname = []
-        countrycode = []
-        indicatorvalue = []   
-        year = []  
-        country = '"' + country + '"'
-        print(country)
-    #county_name, country_code, indicator_value, year
-        query = text('SELECT * FROM gdp_in_usd_abbr_view WHERE year BETWEEN 2000 AND 2017 and country_code = ' + country)
-        gdp_list = connection.execute(query) 
-        #gdp_list = session.query()
-        #.filter_by(country_code=country).all()
+    info = connection.execute(sqlstring).fetchall()
     
-        for name in gdp_list:
-            countryname.append(name[3])
-            countrycode.append(name[2])
-            indicatorvalue.append(name[0])
-            year.append(name[1])
-        global_dict['countryname']=countryname
-        global_dict['countrycode']=countrycode
-        global_dict['indicatorvalue']=indicatorvalue
-        global_dict['year']=year
-        return jsonify(global_dict)
+    df = pd.DataFrame(info)
+    df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
+    df = df.iloc[:,[0,1,2,5]]
 
-# Return data for population.
-@app.route('/populationdata/<country>')
-def populationinfo(country): 
-        population_dict = {}
-        countryname = []
-        countrycode = []
-        indicatorvalue = []   
-        year = []  
-        country = '"' + country + '"'
-    
-        query = text('SELECT * FROM total_population_abbr_view WHERE year BETWEEN 2000 AND 2017 and country_code = ' + country)
-        population_list = connection.execute(query) 
+
+    return df.to_json(orient='records')
+   
+@app.route('/populationinfo/<countrycode>/<start_year>/<end_year>')
+def populationinfo(countrycode,start_year,end_year): 
       
-        for name in population_list:
-            countryname.append(name[3])
-            countrycode.append(name[2])
-            indicatorvalue.append(name[0])
-            year.append(name[1])
-        population_dict['countryname']=countryname
-        population_dict['countrycode']=countrycode
-        population_dict['indicatorvalue']=indicatorvalue
-        population_dict['year']=year
-        return jsonify(population_dict)
+    sqlstring = "select * from total_population_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
-# Return data for co2 emission.
-@app.route('/co2emission/<country>')
-def coinfo(country): 
-        coemission_dict = {}
-        countryname = []
-        countrycode = []
-        indicatorvalue = []   
-        year = []  
-        country = '"' + country + '"'
-
-        query = text('SELECT * FROM total_population_abbr_view WHERE year BETWEEN 2000 AND 2017 and country_code = ' + country)
-        emission_list = connection.execute(query) 
-
-        for name in emission_list:
-            countryname.append(name[3])
-            countrycode.append(name[2])
-            indicatorvalue.append(name[0])
-            year.append(name[1])
-        coemission_dict['countryname']=countryname
-        coemission_dict['countrycode']=countrycode
-        coemission_dict['indicatorvalue']=indicatorvalue
-        coemission_dict['year']=year
-        return jsonify(coemission_dict)
-
-@app.route('/pctrenewable/<country>')
-def pctinfo(country): 
-        pctrenew_dict = {}
-        countryname = []
-        countrycode = []
-        indicatorvalue = []   
-        year = []  
-        country = '"' + country + '"'
+    info = connection.execute(sqlstring).fetchall()
     
-        query = text('SELECT * FROM pct_renewable_energy_abbr_view WHERE year BETWEEN 2000 AND 2017 and country_code = ' + country)
-        pctrenew_list = connection.execute(query) 
+    df = pd.DataFrame(info)
+    df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
+    df = df.iloc[:,[0,1,2,5]]
+
+
+    return df.to_json(orient='records')     
+
+@app.route('/co2emission/<countrycode>/<start_year>/<end_year>')
+def coinfo(countrycode,start_year,end_year): 
+      
+    sqlstring = "select * from co2_emission_kt_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+
+    info = connection.execute(sqlstring).fetchall()
     
-        for name in pctrenew_list:
-            countryname.append(name[3])
-            countrycode.append(name[2])
-            indicatorvalue.append(name[0])
-            year.append(name[1])
-        pctrenew_dict['countryname']=countryname
-        pctrenew_dict['countrycode']=countrycode
-        pctrenew_dict['indicatorvalue']=indicatorvalue
-        pctrenew_dict['year']=year
-        return jsonify(pctrenew_dict)
+    df = pd.DataFrame(info)
+    df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
+    df = df.iloc[:,[0,1,2,5]]
 
-@app.route('/pctaccess/<country>')
-def pctaccess(country): 
-        pctaccess_dict = {}
-        countryname = []
-        countrycode = []
-        indicatorvalue = []   
-        year = []  
-        country = '"' + country + '"'
 
-        query = text('SELECT * FROM pct_access_to_electricity_abbr_view WHERE year BETWEEN 2000 AND 2017 and country_code = ' + country)
-        pctaccess_list = connection.execute(query) 
-        
-        for name in pctaccess_list:
-            countryname.append(name[3])
-            countrycode.append(name[2])
-            indicatorvalue.append(name[0])
-            year.append(name[1])
-        pctaccess_dict['countryname']=countryname
-        pctaccess_dict['countrycode']=countrycode
-        pctaccess_dict['indicatorvalue']=indicatorvalue
-        pctaccess_dict['year']=year
-        return jsonify(pctaccess_dict)
+    return df.to_json(orient='records')      
+
+@app.route('/pctrenewable/<countrycode>/<start_year>/<end_year>')
+def pctinfo(countrycode,start_year,end_year): 
+      
+    sqlstring = "select * from pct_renewable_energy_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+
+    info = connection.execute(sqlstring).fetchall()
+    
+    df = pd.DataFrame(info)
+    df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
+    df = df.iloc[:,[0,1,2,5]]
+
+
+    return df.to_json(orient='records')      
+
+@app.route('/pctaccess/<countrycode>/<start_year>/<end_year>')
+def pctaccess(countrycode,start_year,end_year): 
+      
+    sqlstring = "select * from pct_access_to_electricity_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+
+    info = connection.execute(sqlstring).fetchall()
+    
+    df = pd.DataFrame(info)
+    df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
+    df = df.iloc[:,[0,1,2,5]]
+
+
+    return df.to_json(orient='records')      
+
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
 
