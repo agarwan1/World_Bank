@@ -29,7 +29,8 @@ app = Flask(__name__)
 #################################################
 # Database Setup
 #################################################
-engine = create_engine("mysql://root:root@localhost:3306/bootcamp")
+# engine = create_engine("mysql://root:root@localhost:3306/bootcamp")
+engine = create_engine("mysql://uqaiumbyxn0hqvsb:d2khcwawc7bhw556@etdq12exrvdjisg6.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/b96j9xd74h99bcyy")
 connection = engine.connect()
 #result = connection.execute("select * from countrylist")
 #for row in result:
@@ -139,3 +140,4 @@ def pctaccess(countrycode,start_year,end_year):
 
 if __name__ == "__main__":
     app.run()
+
