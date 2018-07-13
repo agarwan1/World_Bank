@@ -55,7 +55,7 @@ def names():
        new_name_list = {}
        countryname = []
        countrycode = []
-       name_list = connection.execute("SELECT * FROM countrylist").fetchall()
+       name_list = connection.execute("SELECT * FROM country").fetchall()
         
        for name in name_list:
            countryname.append(name[1])
