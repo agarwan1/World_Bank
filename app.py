@@ -70,7 +70,7 @@ def names():
 def gdpinfo(countrycode,start_year,end_year): 
      
    
-    sqlstring = "select * from DP_IN_USD_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from GDP_IN_USD_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
 
