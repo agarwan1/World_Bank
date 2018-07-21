@@ -55,7 +55,7 @@ def names():
        new_name_list = {}
        countryname = []
        countrycode = []
-       name_list = connection.execute("SELECT * FROM country").fetchall()
+       name_list = connection.execute("SELECT * FROM country WHERE country_id >= 47").fetchall()
         
        for name in name_list:
            countryname.append(name[2])
