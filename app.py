@@ -70,21 +70,21 @@ def names():
 def gdpinfo(countrycode,start_year,end_year): 
      
    
-    sqlstring = "select * from gdp_in_usd_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from GDP_IN_USD_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
-    
+
     df = pd.DataFrame(info)
     df.columns=['year','countrycode','countryname','indicatorcode','indicator','data']
     df = df.iloc[:,[0,1,2,5]]
 
-
     return df.to_json(orient='records')
+
    
 @app.route('/populationinfo/<countrycode>/<start_year>/<end_year>')
 def populationinfo(countrycode,start_year,end_year): 
       
-    sqlstring = "select * from total_population_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from TOTAL_POPULATION_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
     
@@ -98,7 +98,7 @@ def populationinfo(countrycode,start_year,end_year):
 @app.route('/co2emission/<countrycode>/<start_year>/<end_year>')
 def coinfo(countrycode,start_year,end_year): 
       
-    sqlstring = "select * from co2_emission_kt_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from CO2_EMISSION_KT_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
     
@@ -112,7 +112,7 @@ def coinfo(countrycode,start_year,end_year):
 @app.route('/pctrenewable/<countrycode>/<start_year>/<end_year>')
 def pctinfo(countrycode,start_year,end_year): 
       
-    sqlstring = "select * from pct_renewable_energy_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from PCT_RENEWABLE_ENERGY_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
     
@@ -126,7 +126,7 @@ def pctinfo(countrycode,start_year,end_year):
 @app.route('/pctaccess/<countrycode>/<start_year>/<end_year>')
 def pctaccess(countrycode,start_year,end_year): 
       
-    sqlstring = "select * from pct_access_to_electricity_abbr_view where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
+    sqlstring = "select * from PCT_ACCESS_TO_ELECTRICITY_ABBR_VIEW where country_code='"+countrycode + "' and year>="+start_year+" and year<=" + end_year
 
     info = connection.execute(sqlstring).fetchall()
     
