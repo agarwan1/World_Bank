@@ -58,8 +58,8 @@ def names():
        name_list = connection.execute("SELECT * FROM country").fetchall()
         
        for name in name_list:
-           countryname.append(name[1])
-           countrycode.append(name[0])
+           countryname.append(name[2])
+           countrycode.append(name[1])
        new_name_list['countryname']=countryname
        new_name_list['countrycode']=countrycode
 
