@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Data Visualization Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="./static/styles.css">
+</head>
+<body>
+  
+    <nav class="navbar navbar-light bg-faded rounded navbar-toggleable-md">
+        <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="nav-item active">
+                <a href="/" class='active'>
+                    <button type="button" class="btn btn-info">World Economic Data Visualization</button>
+                  </a>
+                  </li>
+           
+        
+        </ul>
+        
+            <button class="navbar-toggler visible-xs" type="button" data-toggle="collapse" data-target="#containerNavbar" >
+              <span class="glyphicon glyphicon-th-list align-bottom"></span>
+            </button>
+            
+        <div class="collapse navbar-collapse mylabelstyle" id="containerNavbar">
+              <ul class="nav navbar-nav mr-auto navbar-right">
+                  <li class=""><a href="earth.html">
+                     World Overview
+                     </a>
+                  </li>
+                <li class=""><a href="plotlychart.html">Explore By Country <span class="sr-only">(current)</span></a></li>
+                <li class="active"><a href="">Explore By Region</a></li>
+            <!--    <li><a href="data.html">World Leader </a></li> -->
+              </ul>
+             
+        </div>
+      </div>
+
+</nav>
+
+<div class='tableauPlaceholder' id='viz1532643562300' style='position: relative'>
+    <noscript><a href='#'><img alt='Global Economic Indicators ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ec&#47;EconomicIndicators_9&#47;GlobalEconomicIndicators&#47;1_rss.png' style='border: none' />
+    </a></noscript>
+    <object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> 
+    <param name='site_root' value='' /><param name='name' value='EconomicIndicators_9&#47;GlobalEconomicIndicators' />
+    <param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ec&#47;EconomicIndicators_9&#47;GlobalEconomicIndicators&#47;1.png' />
+    <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' />
+    <param name='display_overlay' value='yes' />
+    <param name='display_count' value='yes' />
+    </object>
+</div>                
+<script type='text/javascript'>                    
+    var divElement = document.getElementById('viz1532643562300');                    
+    var vizElement = divElement.getElementsByTagName('object')[0];                   
+    vizElement.style.width='1016px';
+    vizElement.style.height='991px';                    
+    var scriptElement = document.createElement('script');                    
+    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+    vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+</script>
+
+<footer class="container-fluid text-center">
+  <p>Rutgers Data Science Boot Camp Project 3 July 2018</p>
+</footer>
+
+</body>
+</html>
