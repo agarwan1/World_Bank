@@ -28,13 +28,13 @@
             
         <div class="collapse navbar-collapse mylabelstyle" id="containerNavbar">
               <ul class="nav navbar-nav mr-auto navbar-right">
-                  <li class=""><a href="earth.html">
+                  <li class="active"><a href="earth.html">
                     World Overview </a>
                     
                   </li>
-                <li class="active"><a href="plotlychart.html">Explore By Country <span class="sr-only">(current)</span></a></li>
-                <li><a href="">Explore By Region</a></li>
-            <!--    <li><a href="data.html">World Leader </a></li> -->
+                <li class=""><a href="plotlychart.html">Explore By Country <span class="sr-only">(current)</span></a></li>
+                <li><a href="tableau.html">Explore By Region</a></li>
+           
               </ul>
              
         </div>
@@ -42,8 +42,17 @@
 
 </nav>
 <div class="container">   
-<p id="current" class="myheaderstyle"></p>
-<canvas id="globe" width="860" height="500"></cavnas>
+    <div class="row content">   
+        <div class="col-sm-2 text-left"> 
+    
+       <p id="current" class="myheaderstyle"></p>
+        <p id="currentgdp" class="myheaderstyle"></p>
+        <p id="currentpopulation" class="myheaderstyle"></p>
+      </div>
+      <div class="col-sm-10">  
+          <canvas id="globe" width="860" height="500"></cavnas>
+      </div>
+    </div>
 </div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -51,6 +60,8 @@
 <script src="./static/earth.js"></script>
 <script>
 var current = d3.select('#current')
+var currentgdp = d3.select('#currentgdp')
+var currentpopulation = d3.select('#currentpopulation')
 var canvas = d3.select('#globe')
 var context = canvas.node().getContext('2d')
 // colors
@@ -70,11 +81,15 @@ function enter(country) {
   var country = countryList.find(function(c) {
     return c.id === country.id
   })
-  current.text(country && country.name || '')
+  current.text(country && country.name || '');
+  currentgdp.text("GDP: " + country.gdp);
+  currentpopulation.text("Population: " + parseInt(country.population));
 }
 
 function leave(country) {
-  current.text('')
+  current.text('');
+  currentgdp.text('');
+  currentpopulation.text('');
 }
 
 function fill(obj, color) {
@@ -130,7 +145,7 @@ function dragged() {
 
 d3.json("https://unpkg.com/world-atlas@1/world/110m.json", function(error, world) {
   if (error) throw error;
-    d3.tsv('https://gist.githubusercontent.com/mbostock/4090846/raw/07e73f3c2d21558489604a0bc434b3a5cf41a867/world-country-names.tsv', function(error, country_list) {
+    d3.csv('https://jchi100.github.io/world-country-names.csv', function(error, country_list) {
     
     if (error) throw error;
       
