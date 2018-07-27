@@ -42,13 +42,17 @@ connection = engine.connect()
 def home():
     return render_template("index.html")
 
-@app.route("/plotlychart.html")
+@app.route("/plotlychart")
 def plotlychart():
     return render_template("plotlychart.html")
 
-@app.route("/earth.html")
+@app.route("/earth")
 def earthchart():
     return render_template("earth.html")
+
+@app.route("/tableau")
+def tableau():
+    return render_template("tableau.html")
 
 @app.route('/countrynames')
 def names():
